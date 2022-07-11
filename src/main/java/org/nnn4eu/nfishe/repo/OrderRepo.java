@@ -4,25 +4,26 @@ import org.nnn4eu.nfishe.model.Order;
 import org.nnn4eu.nfishe.model.OrderLine;
 import org.nnn4eu.nfishe.model.Product;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class OrderRepo {
-    private List<Order> orders;
-    public Optional<Order> getOrder(UUID id){
-        return orders.stream().filter(a->a.getId().equals(id)).findFirst();
-    }
-    public List<Order> getOrders(){
-        return orders;
+    private Map<UUID,Order> orders;
+
+    public List<Order> listOrders(){
+        return List.copyOf(orders.values());
     }
 
-    public void addOrder(Order order){
-        if(order!=null)orders.add(order);
+    public Order addOrder(Order newOrder){
+        if(newOrder!=null&&newOrder.getId()!=null)
+        orders.put(newOrder.getId(), newOrder);
+        return newOrder;
     }
+    public Optional<Order> getOrder(UUID id){
+        return (orders.get(id)!=null)?Optional.of(orders.get(id)):Optional.empty();
+    }
+
     public void removeOrder(Order order){
-        if(order!=null)orders.remove(order);
+        if(order!=null&&order.getId()!=null)orders.remove(order.getId());
     }
 
     public void addOrderLine(UUID id, OrderLine orderLine){
@@ -32,7 +33,7 @@ public class OrderRepo {
         if(orderLine!=null && getOrder(id).isPresent())getOrder(id).get().getOrderLines().remove(orderLine);
     }
 
-    public OrderRepo(List<Order> orders) {
+    public OrderRepo(Map<UUID,Order> orders) {
         this.orders = orders;
     }
 }

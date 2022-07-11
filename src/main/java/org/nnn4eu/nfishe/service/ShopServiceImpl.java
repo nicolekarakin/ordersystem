@@ -1,5 +1,6 @@
 package org.nnn4eu.nfishe.service;
 
+import org.nnn4eu.nfishe.exception.OrderNotFoundExeption;
 import org.nnn4eu.nfishe.exception.ProductNotFoundExeption;
 import org.nnn4eu.nfishe.model.Order;
 import org.nnn4eu.nfishe.model.Product;
@@ -32,16 +33,21 @@ public class ShopServiceImpl implements ShopService{
 
     @Override
     public boolean addOrder(Order order) {
+        if(order!=null && order.getId()!=null){
+            orderRepo.addOrder(order);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public Order gerOrder() {
-        return null;
+    public Order gerOrder(UUID id) throws OrderNotFoundExeption {
+        if(orderRepo.getOrder(id).isEmpty())throw new OrderNotFoundExeption("Order with id: "+id+" wasn't found");
+        return orderRepo.getOrder(id).get();
     }
 
     @Override
     public List<Order> listOrders() {
-        return null;
+        return orderRepo.listOrders();
     }
 }

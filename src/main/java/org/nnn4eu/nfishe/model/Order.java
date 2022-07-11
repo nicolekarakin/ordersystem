@@ -27,4 +27,10 @@ public class Order {
     public void setOrderLines(List<OrderLine> orderLines) {
         this.orderLines = orderLines;
     }
+
+    @Override
+    public String toString() {
+        //TODO build string for orderlines arr
+        return id + "\t\t" + orderLines;
+    }
 }
